@@ -1,0 +1,3 @@
+[submodule "avr-stuff"]
+	path = avr-stuff
+	url = https://github.com/benjohnemmett/avr-stuff
