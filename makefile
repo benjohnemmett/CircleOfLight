@@ -5,19 +5,19 @@ CC = avr-gcc
 OBJS = avr-stuff/util/uart/uart.o
 INC = -I./avr-stuff/util/uart/
 
-game.hex: game.o $(OBJS)
-	$(CC) -mmcu=$(MCU) game.o $(OBJS) -o game.elf
-	avr-objcopy -j .text -j .data -O ihex game.elf game.hex
+main.hex: main.o $(OBJS)
+	$(CC) -mmcu=$(MCU) main.o $(OBJS) -o main.elf
+	avr-objcopy -j .text -j .data -O ihex main.elf main.hex
 
-game.o : game.cpp 
+main.o : main.cpp 
 	$(CC) -Os -mmcu=$(MCU) -c $< -o $@ $(INC) -DF_CPU=$(F_CPU)
 
 %.o: %.cpp
 	$(CC) -Os -mmcu=$(MCU) -c $< -o $@ -DF_CPU=$(F_CPU)
 
 .PHONY: flash
-flash: game.hex
-	avrdude -p $(MCU) -c usbasp -U flash:w:game.hex:i
+flash: main.hex
+	avrdude -p $(MCU) -c usbasp -U flash:w:main.hex:i
 
 .PHONY: clean
 clean:
