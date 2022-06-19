@@ -5,9 +5,11 @@
 #include "ReflexProgram.h"
 #include "ButtonManager.h"
 #include "MenuProgram.h"
+#include "TestProgram.h"
 
 ButtonManager buttonManager;
 LightController lightController;
+TestProgram testProgram(&lightController, &buttonManager);
 ReflexProgram reflexProgram(&lightController, &buttonManager);
 
 IProgram *runningProgram;
@@ -18,8 +20,9 @@ int main() {
     SetupUart();
     EnableUartTransmission();
 
-    SendStringToUart((char*)"Adding Reflex Program\r\n");
+    SendStringToUart((char*)"Adding programs to menu\r\n");
     menuProgram.AddProgram(&reflexProgram);
+    menuProgram.AddProgram(&testProgram);
 
     SendStringToUart((char*)"Setting up menu program\r\n");
     runningProgram = &menuProgram;
