@@ -47,6 +47,7 @@ class LightController {
     public:
         void SetupLights();
         void SetLightValue(uint8_t index, uint8_t value);
+        void ClearAllLights();
 };
 
 #endif

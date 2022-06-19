@@ -3,7 +3,7 @@
 ReflexProgram::ReflexProgram(LightController *light_controller, ButtonManager *button_manager) {
     this->light_controller_ = light_controller;
     this->button_manager_ = button_manager;
-    this->cycles_per_light_ = 5;
+    this->cycles_per_light_ = 50;
 }
 
 void ReflexProgram::SetupProgram() {
@@ -36,13 +36,17 @@ void ReflexProgram::Update() {
     current_cycle_++;
 }
 
-void ReflexProgram::StopProgram() {
+void ReflexProgram::TearDownProgram() {
 
 }
 
+bool ReflexProgram::IsDoneRunning() {
+    return false;
+}
+
 void ReflexProgram::PlusButtonPressed() {
-    if (this->cycles_per_light_ > 2) {
-        this->cycles_per_light_--;
+    if (this->cycles_per_light_ > this->MIN_CYCLES_PER_LIGHT) {
+        this->cycles_per_light_ -= this->CYCLES_PER_LIGHT_STEP;
     }
 }
 
@@ -51,7 +55,7 @@ void ReflexProgram::PlayButtonPressed() {
 }
 
 void ReflexProgram::MinusButtonPressed() {
-    if (this->cycles_per_light_ < 9) {
-        this->cycles_per_light_++;
+    if (this->cycles_per_light_ < this->MAX_CYCLES_PER_LIGHT) {
+        this->cycles_per_light_ += this->CYCLES_PER_LIGHT_STEP;
     }
 }

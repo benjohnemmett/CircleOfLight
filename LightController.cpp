@@ -55,3 +55,18 @@ void LightController::SetLightValue(uint8_t index, uint8_t value) {
             break;
     }
 }
+
+void LightController::ClearAllLights() {
+    LIGHT_01_PORT &= ~_BV(LIGHT_01_PIN);
+    LIGHT_02_PORT &= ~_BV(LIGHT_02_PIN);
+    LIGHT_03_PORT &= ~_BV(LIGHT_03_PIN);
+    LIGHT_04_PORT &= ~_BV(LIGHT_04_PIN);
+    LIGHT_05_PORT &= ~_BV(LIGHT_05_PIN);
+    LIGHT_06_PORT &= ~_BV(LIGHT_06_PIN);
+    LIGHT_07_PORT &= ~_BV(LIGHT_07_PIN);
+    LIGHT_08_PORT &= ~_BV(LIGHT_08_PIN);
+    LIGHT_09_PORT &= ~_BV(LIGHT_09_PIN);
+    LIGHT_10_PORT &= ~_BV(LIGHT_10_PIN);
+    LIGHT_11_PORT &= ~_BV(LIGHT_11_PIN);
+    LIGHT_12_PORT &= ~_BV(LIGHT_12_PIN);
+}
