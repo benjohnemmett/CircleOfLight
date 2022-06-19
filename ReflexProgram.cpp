@@ -59,3 +59,7 @@ void ReflexProgram::MinusButtonPressed() {
         this->cycles_per_light_ += this->CYCLES_PER_LIGHT_STEP;
     }
 }
+
+void ReflexProgram::PlayButtonReleased() {}
+void ReflexProgram::PlusButtonReleased() {}
+void ReflexProgram::MinusButtonReleased() {}

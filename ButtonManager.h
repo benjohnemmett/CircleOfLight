@@ -14,6 +14,7 @@ typedef struct {
     uint8_t state;
     uint8_t transitionCounter;
     uint8_t isPressed;
+    uint8_t isReleased;
 } button_state_t;
 
 class IButtonListener {
@@ -21,6 +22,9 @@ class IButtonListener {
         virtual void PlayButtonPressed();
         virtual void PlusButtonPressed();
         virtual void MinusButtonPressed();
+        virtual void PlayButtonReleased();
+        virtual void PlusButtonReleased();
+        virtual void MinusButtonReleased();
 };
 
 class ButtonManager {

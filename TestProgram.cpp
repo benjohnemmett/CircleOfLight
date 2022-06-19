@@ -59,3 +59,7 @@ void TestProgram::MinusButtonPressed() {
         this->cycles_per_light_ += this->CYCLES_PER_LIGHT_STEP;
     }
 }
+
+void TestProgram::PlayButtonReleased() {}
+void TestProgram::PlusButtonReleased() {}
+void TestProgram::MinusButtonReleased() {}

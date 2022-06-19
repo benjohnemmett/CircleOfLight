@@ -29,17 +29,35 @@ void ButtonManager::Update() {
         }
         this->playButton.isPressed = 0;
     }
+    if (this->playButton.isReleased) {
+        if (this->listener_ != 0) {
+            this->listener_->PlayButtonReleased();
+        }
+        this->playButton.isReleased = 0;
+    }
     if (this->plusButton.isPressed) {
         if (this->listener_ != 0) {
             this->listener_->PlusButtonPressed();
         }
         this->plusButton.isPressed = 0;
     }
+    if (this->plusButton.isReleased) {
+        if (this->listener_ != 0) {
+            this->listener_->PlusButtonReleased();
+        }
+        this->plusButton.isReleased = 0;
+    }
     if (this->minusButton.isPressed) {
         if (this->listener_ != 0) {
             this->listener_->MinusButtonPressed();
         }
         this->minusButton.isPressed = 0;
+    }
+    if (this->minusButton.isReleased) {
+        if (this->listener_ != 0) {
+            this->listener_->MinusButtonReleased();
+        }
+        this->minusButton.isReleased = 0;
     }
 }
 
@@ -62,6 +80,8 @@ void ButtonManager::UpdateButton(button_state_t *button, uint8_t isPressed) {
             button->state = isPressed;
             if (button->state != 0) {
                 button->isPressed = 1;
+            } else {
+                button->isReleased = 1;
             }
             button->transitionCounter = 0;
         }

@@ -16,6 +16,9 @@ class TestProgram: public IProgram, public IButtonListener {
         void PlusButtonPressed();
         void PlayButtonPressed();
         void MinusButtonPressed();
+        void PlayButtonReleased();
+        void PlusButtonReleased();
+        void MinusButtonReleased();
 
     private:
         LightController *light_controller_;

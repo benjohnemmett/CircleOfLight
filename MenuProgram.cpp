@@ -86,6 +86,10 @@ void MenuProgram::MinusButtonPressed() {
     }
 }
 
+void MenuProgram::PlayButtonReleased() {}
+void MenuProgram::PlusButtonReleased() {}
+void MenuProgram::MinusButtonReleased() {}
+
 void MenuProgram::AddProgram(IProgram *program) {
     this->program_list_[this->program_list_index_] = program;
     this->program_list_index_++;
