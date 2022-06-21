@@ -166,7 +166,8 @@ void ReflexProgram::MinusButtonPressed() {
 void ReflexProgram::PlayButtonReleased() {
         switch(this->state.CurrentState()) {
         case SPINNING:
-            int8_t points = light_score_mapping_[active_light_index_ - 1];
+            uint8_t multiplier = this->cycles_per_light_array_length_ - this->cycles_per_light_index_;
+            int16_t points = multiplier * (int16_t)light_score_mapping_[active_light_index_ - 1];
             this->score_ += points;
             if (this->score_ < 0) {
                 this->score_ = 0;
