@@ -3,6 +3,7 @@
 ButtonManager::ButtonManager() {
     this->SetupButtonPins();
     this->listener_ = 0;
+    this->minus_button_hold_ticks_ = 0;
 }
 
 void ButtonManager::SetListener(IButtonListener *listener) {
@@ -69,8 +70,13 @@ void ButtonManager::PollButtons() {
     UpdateButton(&this->playButton, playButtonIsPressed);
     UpdateButton(&this->plusButton, plusButtonIsPressed);
     UpdateButton(&this->minusButton, minusButtonIsPressed);
-}
 
+    if (minusButtonIsPressed) {
+        this->minus_button_hold_ticks_++;
+    } else {
+        this->minus_button_hold_ticks_ = 0;
+    }
+}
 
 void ButtonManager::UpdateButton(button_state_t *button, uint8_t isPressed) {
     if (button->state != isPressed) {
@@ -88,4 +94,8 @@ void ButtonManager::UpdateButton(button_state_t *button, uint8_t isPressed) {
     } else {
         button->transitionCounter = 0;
     }
+}
+
+uint16_t ButtonManager::GetMinusButtonHoldTicks() {
+    return this->minus_button_hold_ticks_;
 }

@@ -32,6 +32,7 @@ class ButtonManager {
         ButtonManager();
         void Update();
         void SetListener(IButtonListener *listener);
+        uint16_t GetMinusButtonHoldTicks();
 
     private:
         void SetupButtonPins();
@@ -41,6 +42,7 @@ class ButtonManager {
         button_state_t plusButton = {0, 0, 0};
         button_state_t minusButton = {0, 0, 0};
         IButtonListener *listener_;
+        uint16_t minus_button_hold_ticks_;
 };
 
 #endif

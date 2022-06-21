@@ -7,6 +7,8 @@
 #include "MenuProgram.h"
 #include "TestProgram.h"
 
+#define TICKS_TO_FORCE_EXIT 2000
+
 ButtonManager buttonManager;
 LightController lightController;
 TestProgram testProgram(&lightController, &buttonManager);
@@ -33,7 +35,10 @@ int main() {
         buttonManager.Update();
         runningProgram->Update();
 
-        if (runningProgram->IsDoneRunning()) {
+        bool force_exit = buttonManager.GetMinusButtonHoldTicks() > TICKS_TO_FORCE_EXIT &&
+                        runningProgram != &menuProgram;
+
+        if (runningProgram->IsDoneRunning() || force_exit) {
             runningProgram->TearDownProgram();
             runningProgram = &menuProgram;
             runningProgram->SetupProgram();

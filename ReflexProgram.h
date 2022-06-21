@@ -25,9 +25,6 @@ class ReflexProgramState {
         void ChangeToState(ReflexProgramStateEnum new_state) {
             this->current_state_ = new_state;
             this->update_ticks_in_current_state_ = 0;
-            SendStringToUart((char*)"RP::Change State ");
-            Print((uint8_t)current_state_);
-            SendStringToUart((char*)"\r\n");
         }
 
         ReflexProgramStateEnum CurrentState() {
