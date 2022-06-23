@@ -4,6 +4,7 @@
 #include "IProgram.h"
 #include "LightController.h"
 #include "ButtonManager.h"
+#include "StateMachine.h"
 #include "uart.h"
 
 #define DISPLAY_BLINK_DURATION_TICKS 500
@@ -20,39 +21,6 @@ enum ReflexProgramStateEnum {
     SCORE_TURN,
     DISPLAY_SCORE,
     EXIT
-};
-
-class ReflexProgramState {
-    public:
-        void Update() {
-            this->update_ticks_in_current_state_++;
-        }
-
-        void ChangeToState(ReflexProgramStateEnum new_state) {
-            this->current_state_ = new_state;
-            #ifdef DEBUG_REFLEX_PROGRAM
-            SendStringToUart((char*)"RP::Changing state to ");
-            Print((uint8_t)new_state);
-            SendStringToUart((char*)"\r\n");
-            #endif
-            this->update_ticks_in_current_state_ = 0;
-        }
-
-        ReflexProgramStateEnum CurrentState() {
-            return this->current_state_;
-        }
-
-        uint16_t UpdateTicksInState() {
-            return this->update_ticks_in_current_state_;
-        }
-
-        void ResetTicks() {
-            this->update_ticks_in_current_state_ = 0;
-        }
-
-    private:
-        ReflexProgramStateEnum current_state_ = NONE;
-        uint16_t update_ticks_in_current_state_ = 0;
 };
 
 typedef struct {
@@ -79,7 +47,7 @@ class ReflexProgram: public IProgram, public IButtonListener {
     private:
         LightController *light_controller_;
         ButtonManager *button_manager_;
-        ReflexProgramState state;
+        StateMachine<ReflexProgramStateEnum> state;
         void HandleEntryUpdate();
         void HandleWaitingForButtonPress();
         void HandleSpinningUpdate();

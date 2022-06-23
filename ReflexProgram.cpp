@@ -9,7 +9,7 @@ ReflexProgram::ReflexProgram(LightController *light_controller, ButtonManager *b
 void ReflexProgram::SetupProgram() {
     this->light_controller_->SetupLights();
     this->button_manager_->SetListener(this);
-    this->state.ChangeToState(ENTRY);
+    this->state.ChangeState(ENTRY);
     this->cycles_per_light_index_ = 2;
     this->score_ = 0;
     this->turn_ = 0;
@@ -53,7 +53,7 @@ void ReflexProgram::HandleEntryUpdate() {
 
         if (light_to_activate >= 12) {
             this->light_controller_->ClearAllLights();
-            this->state.ChangeToState(WAITING_FOR_BTN_PRESS);
+            this->state.ChangeState(WAITING_FOR_BTN_PRESS);
         } else {
             this->light_controller_->ClearAllLights();
             this->light_controller_->SetLightValue(light_to_activate, 1);
@@ -90,14 +90,14 @@ void ReflexProgram::HandleScoreTurnUpdate() {
     if (ticks > 6*256) {
         this->light_controller_->ClearAllLights();
         if (this->turn_ < 3) {
-            this->state.ChangeToState(WAITING_FOR_BTN_PRESS);
+            this->state.ChangeState(WAITING_FOR_BTN_PRESS);
         } else {
             if (this->score_ > 0) {
                 this->display_score_struct_.score = this->score_;
                 this->display_score_struct_.light_is_on = 0;
-                this->state.ChangeToState(DISPLAY_SCORE);
+                this->state.ChangeState(DISPLAY_SCORE);
             } else {
-                this->state.ChangeToState(EXIT);
+                this->state.ChangeState(EXIT);
             }
             SendStringToUart((char*)"RP::Final Score ");
             Print((uint16_t)this->score_);
@@ -123,7 +123,7 @@ void ReflexProgram::HandleDisplayScoreUpdate() {
             #endif
             this->light_controller_->ClearAllLights();
             if (this->display_score_struct_.score == 0) {
-                this->state.ChangeToState(EXIT);
+                this->state.ChangeState(EXIT);
             }
             this->display_score_struct_.light_is_on = 0;
             this->state.ResetTicks();
@@ -187,7 +187,7 @@ void ReflexProgram::PlayButtonPressed() {
         case WAITING_FOR_BTN_PRESS:
             this->turn_++;
             this->light_controller_->ClearAllLights();
-            this->state.ChangeToState(SPINNING);
+            this->state.ChangeState(SPINNING);
             break;
     }
 }
@@ -227,7 +227,7 @@ void ReflexProgram::PlayButtonReleased() {
             SendStringToUart((char*)"\r\n");
             #endif
 
-            this->state.ChangeToState(SCORE_TURN);
+            this->state.ChangeState(SCORE_TURN);
             break;
     }
 }
