@@ -6,6 +6,12 @@
 #include "ButtonManager.h"
 #include "uart.h"
 
+#define DISPLAY_BLINK_DURATION_TICKS 500
+#define LIGHT_INDEX_1000S 1
+#define LIGHT_INDEX_100S 2
+#define LIGHT_INDEX_10S 3
+#define LIGHT_INDEX_1S 4
+
 enum ReflexProgramStateEnum {
     NONE,
     ENTRY,
@@ -24,6 +30,11 @@ class ReflexProgramState {
 
         void ChangeToState(ReflexProgramStateEnum new_state) {
             this->current_state_ = new_state;
+            #ifdef DEBUG_REFLEX_PROGRAM
+            SendStringToUart((char*)"RP::Changing state to ");
+            Print((uint8_t)new_state);
+            SendStringToUart((char*)"\r\n");
+            #endif
             this->update_ticks_in_current_state_ = 0;
         }
 
@@ -43,6 +54,12 @@ class ReflexProgramState {
         ReflexProgramStateEnum current_state_ = NONE;
         uint16_t update_ticks_in_current_state_ = 0;
 };
+
+typedef struct {
+    uint16_t score;
+    uint16_t phase;
+    uint8_t light_is_on;
+} display_score_struct_t;
 
 class ReflexProgram: public IProgram, public IButtonListener {
     public:
@@ -84,6 +101,7 @@ class ReflexProgram: public IProgram, public IButtonListener {
 
         uint8_t toggle_light_state_;
         uint8_t game_is_running_;
+        display_score_struct_t display_score_struct_;
 
 };
 

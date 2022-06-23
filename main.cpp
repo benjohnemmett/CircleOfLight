@@ -6,6 +6,7 @@
 #include "ButtonManager.h"
 #include "MenuProgram.h"
 #include "TestProgram.h"
+#include "CountDownTimerProgram.h"
 
 #define TICKS_TO_FORCE_EXIT 2000
 

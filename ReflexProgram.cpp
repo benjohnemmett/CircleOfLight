@@ -92,7 +92,16 @@ void ReflexProgram::HandleScoreTurnUpdate() {
         if (this->turn_ < 3) {
             this->state.ChangeToState(WAITING_FOR_BTN_PRESS);
         } else {
-            this->state.ChangeToState(DISPLAY_SCORE);
+            if (this->score_ > 0) {
+                this->display_score_struct_.score = this->score_;
+                this->display_score_struct_.light_is_on = 0;
+                this->state.ChangeToState(DISPLAY_SCORE);
+            } else {
+                this->state.ChangeToState(EXIT);
+            }
+            SendStringToUart((char*)"RP::Final Score ");
+            Print((uint16_t)this->score_);
+            SendStringToUart((char*)"\r\n");
         }
     }
 
@@ -103,16 +112,49 @@ void ReflexProgram::HandleScoreTurnUpdate() {
 }
 
 void ReflexProgram::HandleDisplayScoreUpdate() {
+    uint16_t ticks = this->state.UpdateTicksInState();
 
-    SendStringToUart((char*)"RP::Game over. Score - ");
-    Print((uint16_t)this->score_);
-    SendStringToUart((char*)"\r\n");
-
-    this->state.ChangeToState(EXIT);
+    if (ticks > DISPLAY_BLINK_DURATION_TICKS) {
+        if (this->display_score_struct_.light_is_on) {
+            #ifdef DEBUG_REFLEX_PROGRAM
+            SendStringToUart((char*)"RP::Score left ");
+            Print(this->display_score_struct_.score);
+            SendStringToUart((char*)"\r\n");
+            #endif
+            this->light_controller_->ClearAllLights();
+            if (this->display_score_struct_.score == 0) {
+                this->state.ChangeToState(EXIT);
+            }
+            this->display_score_struct_.light_is_on = 0;
+            this->state.ResetTicks();
+        } else {
+            if (this->display_score_struct_.score >= 1000) {
+                this->light_controller_->SetLightValue(LIGHT_INDEX_1000S, 1);
+                this->display_score_struct_.score -= 1000;
+                this->display_score_struct_.light_is_on = 1;
+                this->state.ResetTicks();
+            } else if (this->display_score_struct_.score >= 100) {
+                this->light_controller_->SetLightValue(LIGHT_INDEX_100S, 1);
+                this->display_score_struct_.score -= 100;
+                this->display_score_struct_.light_is_on = 1;
+                this->state.ResetTicks(); 
+            } else if (this->display_score_struct_.score >= 10) {
+                this->light_controller_->SetLightValue(LIGHT_INDEX_10S, 1);
+                this->display_score_struct_.score -= 10;
+                this->display_score_struct_.light_is_on = 1;
+                this->state.ResetTicks();
+            } else if (this->display_score_struct_.score >= 1) {
+                this->light_controller_->SetLightValue(LIGHT_INDEX_1S, 1);
+                this->display_score_struct_.score -= 1;
+                this->display_score_struct_.light_is_on = 1;
+                this->state.ResetTicks();
+            }
+        }
+    }
 }
 
 void ReflexProgram::HandleExitUpdate() {
-        uint16_t ticks = this->state.UpdateTicksInState();
+    uint16_t ticks = this->state.UpdateTicksInState();
 
     if (ticks % 64 == 0) {
         uint8_t light_to_activate = (ticks / 64) + 1;
@@ -139,7 +181,6 @@ void ReflexProgram::TearDownProgram() {
 bool ReflexProgram::IsDoneRunning() {
     return !this->game_is_running_;
 }
-
 
 void ReflexProgram::PlayButtonPressed() {
     switch(this->state.CurrentState()) {
@@ -168,10 +209,24 @@ void ReflexProgram::PlayButtonReleased() {
         case SPINNING:
             uint8_t multiplier = this->cycles_per_light_array_length_ - this->cycles_per_light_index_;
             int16_t points = multiplier * (int16_t)light_score_mapping_[active_light_index_ - 1];
+
+            #ifdef DEBUG_REFLEX_PROGRAM
+            SendStringToUart((char*)"RP::Points ");
+            Print((uint16_t)points);
+            SendStringToUart((char*)"\r\n");
+            #endif
+
             this->score_ += points;
             if (this->score_ < 0) {
                 this->score_ = 0;
             }
+
+            #ifdef DEBUG_REFLEX_PROGRAM
+            SendStringToUart((char*)"RP::Score ");
+            Print((uint16_t)this->score_);
+            SendStringToUart((char*)"\r\n");
+            #endif
+
             this->state.ChangeToState(SCORE_TURN);
             break;
     }
