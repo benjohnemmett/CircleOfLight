@@ -14,6 +14,7 @@ ButtonManager buttonManager;
 LightController lightController;
 TestProgram testProgram(&lightController, &buttonManager);
 ReflexProgram reflexProgram(&lightController, &buttonManager);
+CountDownTimerProgram countdownTimerProgram(&lightController, &buttonManager);
 
 IProgram *runningProgram;
 
@@ -25,6 +26,7 @@ int main() {
 
     SendStringToUart((char*)"Adding programs to menu\r\n");
     menuProgram.AddProgram(&reflexProgram);
+    menuProgram.AddProgram(&countdownTimerProgram);
     menuProgram.AddProgram(&testProgram);
 
     SendStringToUart((char*)"Setting up menu program\r\n");
