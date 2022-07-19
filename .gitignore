@@ -5,3 +5,10 @@
 .vscode/
 
 .DS_Store
+
+export
+fp-info-cache
+*.zip
+*-bak
+sym-lib-table
+_autosave*
